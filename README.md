@@ -1,3 +1,22 @@
+### Output based Javascript questions:
+
+### Event Loop based output questions
+
+/* 
+1. Mircotask queue: Microtasks are tasks that are executed asynchronously, but before the browser continues to render.
+2. Higher priority tasks
+3. Examples of microtask sources include Promise resolution and queueMicrotask.
+4. Microtasks include operations like Promise callbacks (then, catch, finally), async/await, and queueMicrotask. */
+
+/* Macrotasks:
+
+Macrotasks are tasks that are executed asynchronously, but they are placed in a queue and executed after the microtasks and before the browser continues to render. 
+Macrotasks include operations like setTimeout, setInterval, requestAnimationFrame, I/O operations, and event listeners.
+Examples of macrotask sources include setTimeout, setInterval, and event listeners.
+*/
+
+
+
 ###### 1. What's the output?
 
 ```javascript
