@@ -250,3 +250,51 @@ console.log("script");
 
 </p>
 </details>
+
+### Question 7: Order of Execution -FE
+
+```javascript
+async function async1() {
+  console.log("async1 start");
+  await async2();
+  console.log("async1 end");
+}
+
+async function async2() {
+  console.log("async2");
+}
+
+console.log("Magic start");
+
+async1();
+
+setTimeout(function () {
+  console.log("setTimeout");
+}, 0);
+
+new Promise(function (resolve) {
+  console.log("promise1");
+  resolve();
+}).then(function () {
+  console.log("promise2");
+});
+
+console.log("Magic end");
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+"Magic start";
+"async1 start";
+"async2";
+"promise1";
+"Magic end";
+"async1 end";
+"promise2";
+"setTimeout";
+
+</p>
+</details>
