@@ -2,20 +2,19 @@
 
 ### Event Loop based output questions
 
-/* 
+/\*
+
 1. Mircotask queue: Microtasks are tasks that are executed asynchronously, but before the browser continues to render.
 2. Higher priority tasks
 3. Examples of microtask sources include Promise resolution and queueMicrotask.
-4. Microtasks include operations like Promise callbacks (then, catch, finally), async/await, and queueMicrotask. */
+4. Microtasks include operations like Promise callbacks (then, catch, finally), async/await, and queueMicrotask. \*/
 
-/* Macrotasks:
+/\* Macrotasks:
 
-Macrotasks are tasks that are executed asynchronously, but they are placed in a queue and executed after the microtasks and before the browser continues to render. 
+Macrotasks are tasks that are executed asynchronously, but they are placed in a queue and executed after the microtasks and before the browser continues to render.
 Macrotasks include operations like setTimeout, setInterval, requestAnimationFrame, I/O operations, and event listeners.
 Examples of macrotask sources include setTimeout, setInterval, and event listeners.
-*/
-
-
+\*/
 
 ###### 1. What's the output?
 
@@ -314,6 +313,389 @@ console.log("Magic end");
 "async1 end";
 "promise2";
 "setTimeout";
+
+</p>
+</details>
+
+### Closures
+
+### Question 8:
+
+```javascript
+function makeCounter() {
+  let count = 0;
+  return function () {
+    count++;
+    return count;
+  };
+}
+
+const counter1 = makeCounter();
+const counter2 = makeCounter();
+
+console.log(counter1()); // ?
+console.log(counter1()); // ?
+console.log(counter2()); // ?
+console.log(counter1()); // ?
+console.log(counter2()); // ?
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer: 1 2 1 3 2
+
+</p>
+</details>
+
+### Question 9:
+
+```javascript
+function createArray() {
+  let arr = [];
+  for (let i = 0; i < 3; i++) {
+    arr[i] = function () {
+      return i;
+    };
+  }
+  return arr;
+}
+
+const arr = createArray();
+
+console.log(arr[0]()); // ?
+console.log(arr[1]()); // ?
+console.log(arr[2]()); // ?
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer: 0 1 2
+
+</p>
+</details>
+
+### Question 10: Closure and function scope -IIFE
+
+```javascript
+function createFunctions() {
+  let arr = [];
+  for (var i = 0; i < 3; i++) {
+    arr[i] = (function (i) {
+      return function () {
+        return i;
+      };
+    })(i);
+  }
+  return arr;
+}
+
+const funcs = createFunctions();
+
+console.log(funcs[0]()); // ?
+console.log(funcs[1]()); // ?
+console.log(funcs[2]()); // ?
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer: 0 1 2
+
+The use of an IIFE (Immediately Invoked Function Expression) captures the current value of i at each iteration, creating a new scope for each function in the array.
+
+</p>
+</details>
+
+### Question 11: Closure and this
+
+```javascript
+const obj = {
+  name: "Kiran",
+  createGreeting: function () {
+    return function () {
+      return "Hello, " + this.name;
+    };
+  },
+};
+
+const greeting = obj.createGreeting();
+console.log(greeting()); // ?
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+The function returned by createGreeting uses the value of this from its own execution context, which is not bound to obj. By default, this will be undefined in strict mode or the global object in non-strict mode. If the global object does not have a name property, the output will be undefined.
+
+#### Answer: Hello, undefined
+
+</p>
+</details>
+
+### Question 12: Fixing this in the closure
+
+```javascript
+const obj = {
+  name: "Kiran",
+  createGreeting: function () {
+    const self = this;
+    return function () {
+      return "Hello, " + self.name;
+    };
+  },
+};
+
+const greeting = obj.createGreeting();
+console.log(greeting()); // ?
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer: Hello Kiran
+
+</p>
+</details>
+
+### Question 13: The closure and the timeout!
+
+```javascript
+for (var i = 0; i < 3; i++) {
+  setTimeout(function () {
+    console.log(i);
+  }, 1000);
+}
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer: 3 3 3
+
+All three setTimeout callbacks share the same i variable, which has the value 3 after the loop finishes.
+
+</p>
+</details>
+
+### Question 12: Fixing this in the closure
+
+```javascript
+const obj = {
+  name: "Kiran",
+  createGreeting: function () {
+    const self = this;
+    return function () {
+      return "Hello, " + self.name;
+    };
+  },
+};
+
+const greeting = obj.createGreeting();
+console.log(greeting()); // ?
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer: Hello Kiran
+
+</p>
+</details>
+
+### Question 13: Fixing Closure and Timeout with IIFE
+
+```javascript
+for (var i = 0; i < 3; i++) {
+  (function (i) {
+    setTimeout(function () {
+      console.log(i);
+    }, 1000);
+  })(i);
+}
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer: 0 1 2
+
+The IIFE captures the current value of i in each iteration, creating a new scope for each setTimeout callback.
+
+</p>
+</details>
+
+### Question 14: Closure with block scope
+
+```javascript
+for (let i = 0; i < 3; i++) {
+  setTimeout(function () {
+    console.log(i);
+  }, 1000);
+}
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer: 0 1 2
+
+Using let in the loop creates a new binding for i in each iteration, so each setTimeout callback gets its own i value.
+
+</p>
+</details>
+
+### Hoisting
+
+### Question 14: Hoisting
+
+```javascript
+function hoist() {
+  console.log(test); // Output?
+
+  var test = "I am a variable";
+
+  function test() {
+    console.log("I am a function");
+  }
+
+  console.log(test); // Output?
+}
+
+hoist();
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+function test() { console.log("I am a function"); }
+I am a variable
+
+The function declaration test is hoisted first, followed by the variable declaration var test. The variable declaration does not override the function declaration, but the assignment test = "I am a variable" does.
+
+</p>
+</details>
+
+### Question 15: Hositing
+
+```javascript
+foo(); // Output?
+function foo() {
+  console.log("First");
+}
+
+var foo = function () {
+  console.log("Second");
+};
+
+foo(); // Output?
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer: First Second
+
+The function foo is hoisted first, followed by the variable declaration var foo, which does not change the function declaration. The assignment to foo (the function expression) happens at runtime, thus overriding the original function.
+
+</p>
+</details>
+
+### Question 16: Hositing
+
+```javascript
+console.log(foo); // Output?
+console.log(bar); // Output?
+
+var foo = "foo";
+
+function bar() {
+  console.log("bar");
+}
+
+console.log(foo); // Output?
+console.log(bar); // Output?
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+undefined
+function bar() { console.log("bar"); }
+foo
+function bar() { console.log("bar"); }
+
+var foo is hoisted and initialized with undefined.
+The function bar is hoisted as a whole, so console.log(bar) outputs the function definition.
+
+</p>
+</details>
+
+### Question 16: Hositing Temporal Dead Zone (TDZ)
+
+```javascript
+{
+  console.log(a); // Output?
+  let a = 10;
+  console.log(a); // Output?
+}
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+ReferenceError: Cannot access 'a' before initialization
+10
+
+The block scope created by the {} introduces a Temporal Dead Zone (TDZ) for a from the start of the block until the let a = 10 line is executed. Accessing a before its declaration results in a ReferenceError.
+
+</p>
+</details>
+
+### Question 17: Complex Scoping and Hoisting
+
+```javascript
+console.log(a); // Output?
+
+function foo() {
+  var a = 1;
+
+  if (true) {
+    var a = 2;
+    console.log(a); // Output?
+  }
+
+  console.log(a); // Output?
+}
+
+foo();
+
+console.log(a); // Output?
+var a = 3;
+console.log(a); // Output?
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+undefined
+2
+2
+undefined
+3
+
+var a is hoisted to the top of its scope. Initially, a is declared but not initialized, so console.log(a) outputs undefined.
+Inside foo, var a within the if block is the same as the var a in the function scope.
+Outside of foo, var a is hoisted but not initialized until the assignment.
 
 </p>
 </details>
