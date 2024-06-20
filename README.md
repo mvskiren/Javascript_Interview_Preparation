@@ -699,3 +699,367 @@ Outside of foo, var a is hoisted but not initialized until the assignment.
 
 </p>
 </details>
+
+### Question 18: This
+
+```javascript
+console.log(this); // Output?
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+In a browser: Window object.
+In Node.js: global object
+
+</p>
+</details>
+
+### Question 19: Method Context
+
+```javascript
+const obj = {
+  name: "John",
+  getName: function () {
+    console.log(this.name);
+  },
+};
+obj.getName(); // Output?
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+John
+
+</p>
+</details>
+
+### Question 20: Arrow function context
+
+```javascript
+const obj = {
+  name: "John",
+  getName: () => {
+    console.log(this.name);
+  },
+};
+obj.getName(); // Output?
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+undefined
+
+</p>
+</details>
+
+### Question 21: call Method, apply ,bind
+
+```javascript
+function greet() {
+  console.log(this.name);
+}
+const person = {
+  name: "Ram",
+};
+greet.call(person); // Output?
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+Ram
+
+</p>
+</details>
+
+### Question 22: This challenge
+
+```javascript
+const obj = {
+  name: "John",
+  outerFunc: function () {
+    console.log(this.name); // Output?
+
+    function innerFunc() {
+      console.log(this.name); // Output?
+    }
+
+    innerFunc();
+  },
+};
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+obj.outerFunc();
+John (from outerFunc)
+undefined (from innerFunc)
+Explanation: innerFunc is a regular function, and this inside it refers to the global object.
+
+</p>
+</details>
+
+### Question 23: This challenge
+
+```javascript
+const button = document.createElement("button");
+button.innerText = "Click me";
+button.onclick = function () {
+  console.log(this); // Output?
+};
+document.body.appendChild(button);
+button.click();
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+The button element itself (<button>Click me</button>).
+
+</p>
+</details>
+
+## Question 24: This challenge
+
+```javascript
+const obj = {
+  value: 100,
+  method: function () {
+    console.log(this.value); // Output?
+
+    const innerArrow = () => {
+      console.log(this.value); // Output?
+    };
+
+    function innerFunc() {
+      console.log(this.value); // Output?
+    }
+
+    innerArrow();
+    innerFunc();
+  },
+};
+obj.method();
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+100 (from method)
+100 (from innerArrow)
+undefined (from innerFunc)
+
+</p>
+</details>
+
+## Question 25: This challenge
+
+```javascript
+function logThis() {
+  console.log(this);
+}
+const obj = {
+  logThis,
+  logThis2() {
+    return logThis();
+  },
+  logThis3() {
+    return obj.logThis();
+  },
+};
+obj.logThis();
+obj.logThis2();
+obj.logThis3();
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+Obj, window, Obj
+
+</p>
+</details>
+
+## Question 26: This challenge
+
+```javascript
+const objA = {
+  foo() {
+    console.log(this);
+  },
+  bar: () => console.log(this),
+};
+const objB = {
+  foo: objA.foo,
+  bar: () => objA.bar(),
+  baz() {
+    objA.foo();
+  },
+};
+objB.foo();
+objB.bar();
+objB.baz();
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+obj2, window, window, obj2, obj1
+
+</p>
+</details>
+
+## Question 26: This challenge
+
+```javascript
+function logThis() {
+  console.log(this);
+}
+const obj = {
+  logThis,
+  logThisInArrow: () => console.log(this),
+  logThisNested() {
+    const nestedFunc = () => console.log(this);
+    nestedFunc();
+  },
+};
+obj.logThis();
+obj.logThisInArrow();
+obj.logThisNested();
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+Obj, window, obj
+
+</p>
+</details>
+
+## Question 27: This challenge
+
+```javascript
+const obj = {
+  logThis() {
+    console.log(this);
+  },
+  logThis2() {
+    function logThisInner() {
+      console.log(this);
+    }
+    return logThisInner.apply(this);
+  },
+};
+const { logThis, logThis2 } = obj;
+logThis();
+logThis2();
+obj.logThis();
+obj.logThis2();
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+window window obj obj
+
+</p>
+</details>
+
+## Question 28: This challenge
+
+```javascript
+const obj = {
+  logThis() {
+    console.log(this);
+  },
+  logThis2() {
+    function logThisInner() {
+      console.log(this);
+    }
+    return logThisInner.apply(this);
+  },
+};
+const { logThis, logThis2 } = obj;
+logThis();
+logThis2();
+obj.logThis();
+obj.logThis2();
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+window window obj obj
+
+</p>
+</details>
+
+## Question 28: This challenge
+
+```javascript
+console.log("Start");
+
+setTimeout(() => {
+  console.log("Timeout 1");
+  Promise.resolve().then(() => {
+    console.log("Promise 1");
+  });
+}, 1000);
+let x = false;
+function abc() {
+  if (!x) {
+    // x=false
+    setTimeout(() => {
+      x = true;
+      console.log("test");
+    }, 0);
+  }
+  return Promise.resolve().then(() => {
+    console.log("hello");
+    return abc();
+  });
+}
+abc();
+
+console.log("End");
+```
+
+<details><summary><b>Answer</b></summary>
+<p>
+
+#### Answer:
+
+Callback queue starvation
+
+// Start -> End -> Hello -> Hello....
+
+</p>
+</details>
