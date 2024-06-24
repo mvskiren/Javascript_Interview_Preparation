@@ -55,7 +55,7 @@ const timer = (init = 0, step = 1) => {
   let count = init;
   let intervalId = null;
 
-  const startTimer = () => {
+  const startTimer = () => {  
     if (!intervalId) {
       intervalId = setInterval(() => {
         console.log(count);
@@ -296,7 +296,7 @@ clearAllTimeout();
 
 // debounce function
 
-const debounce = (fn, delay) => {
+const debounce = (fn, delay) => { 
   let timmerId = null;
   return function () {
     const context = this;
