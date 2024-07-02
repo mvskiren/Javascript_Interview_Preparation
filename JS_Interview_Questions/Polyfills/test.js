@@ -3,7 +3,7 @@ class MyPromise {
     this.state = "pending";
     this.value = undefined;
     this.reason = undefined;
-    this.onFulfilledCallbacks = [];
+    this.onFulfilledCallbacks = []; // [{},{},{}]
     this.onRejectedCallbacks = [];
 
     const resolve = (value) => {
@@ -79,19 +79,21 @@ class MyPromise {
 }
 
 // Example usage:
-const myPromise = new MyPromise((resolve, reject) => {
+const promise = new MyPromise((resolve, reject) => {
   setTimeout(() => {
-    resolve("Hello, world!");
-  }, 1000);
+    resolve("Step 1");
+  }, 5000);
 });
 
-myPromise
+promise
   .then((result) => {
-    console.log(result); // Output: "Hello, world!"
+    console.log(result); // Should log 'Step 1'
+    return "Step 2";
   })
-  .catch((error) => {
-    console.error(error);
+  .then((result) => {
+    console.log(result); // Should log 'Step 2'
+    return "Step 3";
   })
-  .finally(() => {
-    console.log("Promise execution completed.");
+  .then((result) => {
+    console.log(result); // Should log 'Step 3'
   });

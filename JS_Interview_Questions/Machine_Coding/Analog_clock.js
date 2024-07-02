@@ -88,3 +88,5 @@ import "./styles.css";
 //     align-items: center;
 //     justify-content: center;
 //   }
+
+// link: https://codesandbox.io/p/sandbox/analog-practice-jyznsq

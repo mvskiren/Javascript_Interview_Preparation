@@ -154,6 +154,14 @@ console.log(a);
 let b = memoizedFactorial(5); // memoized cached call, faster
 console.log(b);
 
+
+// Questions: why JSON.stringify():
+// When you use JSON.stringify, you are creating a string representation of the arguments. 
+// This string is then used as a unique key to store and retrieve cached results.
+//  This approach ensures that even complex argument types (such as arrays or objects) are correctly handled and that different argument combinations generate unique keys
+//  Reference Types: Arrays and objects with the same content will not match unless they are the exact same instance.
+// Limited Use: Only useful for simple primitive arguments (numbers, strings)
+
 //-----------------------------------------------------------
 // Misc: Array iterator method
 
@@ -232,6 +240,7 @@ const curry = (fn, arity = fn.length, ...args) =>
 
 const curriedFunc = curry(originalFn);
 console.log(curriedFunc(1)(2)(3));
+ 
 
 //--------------------------------------------------------
 
@@ -361,6 +370,39 @@ const print = () => {
 const throttled = throttle(print, 2500);
 
 window.addEventListener("mousemove", throttled, false);
+
+/* Convert to 24 hours timeformat */
+function formatTime(time) {
+  const timeFormat = time.toLowerCase();
+  let [hours, mins] = timeFormat.split(":");
+  if (timeFormat.endsWith("am")) {
+    hours = hours === 12 ? "0" : hours;
+  } else if (timeFormat.endsWith("pm")) {
+    hours = hours === 12 ? hours : String(+hours + 12);
+  }
+  return `${hours.padStart(2, 0)}:${mins.slice(0, -2).padStart(2, 0)} `;
+}
+//  console.log(formatTime("12:10AM"));
+
+/* Convert to 12 hours timeformat */
+function formatTime1(time) {
+  let [hours, mins] = time.split(":");
+
+  let ampm = "AM";
+  if (hours >= 12) {
+    ampm = "PM";
+  }
+  if (hours > 12) {
+    hours = hours - 12;
+  }
+  if (hours == 0) {
+    hours = 12;
+  }
+  return `${hours}:${mins}${ampm}`;
+}
+// console.log(formatTime1("16:10"));
+// console.log(formatTime1("23:00"));
+// console.log(formatTime1("24:00"));
 
 // Promises.all()
 
